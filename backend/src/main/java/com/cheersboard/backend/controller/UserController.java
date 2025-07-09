@@ -1,10 +1,11 @@
 package com.cheersboard.backend.controller;
 
-import com.cheersboard.backend.dto.UpdateEmailRequest;
-import com.cheersboard.backend.dto.UpdatePasswordRequest;
-import com.cheersboard.backend.model.Like;
-import com.cheersboard.backend.model.Pin;
-import com.cheersboard.backend.model.User;
+import com.cheersboard.backend.dto.like.LikeResponse;
+import com.cheersboard.backend.dto.pin.PinResponse;
+import com.cheersboard.backend.dto.user.CreateUserRequest;
+import com.cheersboard.backend.dto.user.UpdateEmailRequest;
+import com.cheersboard.backend.dto.user.UpdatePasswordRequest;
+import com.cheersboard.backend.dto.user.UserResponse;
 import com.cheersboard.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,36 +24,36 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") Long id){
-        User user = userService.getUserById(id);
+    public ResponseEntity<UserResponse> getUser(@PathVariable("id") Long id){
+        UserResponse user = userService.getUserById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers(){
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserResponse>> getUsers(){
+        List<UserResponse> users = userService.getAllUsers();
 
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest){
+        UserResponse createdUser = userService.createUser(createUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}/email")
-    public ResponseEntity<User> updateUserEmail(@PathVariable("id") Long id, @Valid @RequestBody UpdateEmailRequest updateEmailRequest){
-        User user = userService.updateUserEmail(id, updateEmailRequest.getEmail());
+    public ResponseEntity<UserResponse> updateUserEmail(@PathVariable("id") Long id, @Valid @RequestBody UpdateEmailRequest updateEmailRequest){
+        UserResponse user = userService.updateUserEmail(id, updateEmailRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<User> updateUserPassword(@PathVariable("id") Long id, @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest){
-        User user = userService.updateUserPassword(id, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
+    public ResponseEntity<UserResponse> updateUserPassword(@PathVariable("id") Long id, @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest){
+        UserResponse user = userService.updateUserPassword(id, updatePasswordRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
@@ -66,15 +67,15 @@ public class UserController {
 
     // ---
     @GetMapping("/{id}/pins")
-    public ResponseEntity<List<Pin>> getUserPins(@PathVariable("id") Long id){
-        List<Pin> userPins = userService.getAllUserPins(id);
+    public ResponseEntity<List<PinResponse>> getUserPins(@PathVariable("id") Long id){
+        List<PinResponse> userPins = userService.getUserPins(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(userPins);
     }
 
     @GetMapping("/{id}/likes")
-    public ResponseEntity<List<Like>> getUserLikes(@PathVariable("id") Long id){
-        List<Like> userLikes = userService.getAllUserLikes(id);
+    public ResponseEntity<List<LikeResponse>> getUserLikes(@PathVariable("id") Long id){
+        List<LikeResponse> userLikes = userService.getUserLikes(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(userLikes);
     }

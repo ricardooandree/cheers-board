@@ -1,73 +1,109 @@
 package com.cheersboard.backend.service;
 
+import com.cheersboard.backend.dto.like.LikeResponse;
+import com.cheersboard.backend.dto.pin.PinResponse;
+import com.cheersboard.backend.dto.user.CreateUserRequest;
+import com.cheersboard.backend.dto.user.UpdateEmailRequest;
+import com.cheersboard.backend.dto.user.UpdatePasswordRequest;
+import com.cheersboard.backend.dto.user.UserResponse;
 import com.cheersboard.backend.exception.DuplicateResourceException;
 import com.cheersboard.backend.exception.ResourceNotFoundException;
-import com.cheersboard.backend.model.Like;
-import com.cheersboard.backend.model.Pin;
 import com.cheersboard.backend.model.User;
 import com.cheersboard.backend.repository.UserRepository;
+import com.cheersboard.backend.util.mapper.LikeMapper;
+import com.cheersboard.backend.util.mapper.PinMapper;
+import com.cheersboard.backend.util.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PinMapper pinMapper;
+    private final LikeMapper likeMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       UserMapper userMapper,
+                       PinMapper pinMapper,
+                       LikeMapper likeMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.pinMapper = pinMapper;
+        this.likeMapper = likeMapper;
     }
 
     /**
      * CREATE Methods
      */
-    public User createUser(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+    public UserResponse createUser(CreateUserRequest createUserRequest) {
+        if (userRepository.existsByUsername(createUserRequest.getUsername())) {
             throw new DuplicateResourceException("Username already taken");
         }
 
-        if (userRepository.existsByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(createUserRequest.getEmail())){
             throw new DuplicateResourceException("Email already taken");
         }
 
-        return userRepository.save(user);
+        // TODO: Password hashing + salting!
+
+        String password = createUserRequest.getPassword();
+
+        User newUser = userMapper.toEntity(createUserRequest, password);
+        userRepository.save(newUser);
+
+        return userMapper.toResponse(newUser);
     }
 
     /**
      * GET Methods
      */
-    public User getUserById(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
-    public User getUserByUsername(String username){
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
-    }
-
-    public List<Pin> getAllUserPins(Long id){
+    public UserResponse getUserById(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return user.getPins();
+        return userMapper.toResponse(user);
     }
 
-    public List<Like> getAllUserLikes(Long id){
+    public UserResponse getUserByUsername(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return userMapper.toResponse(user);
+    }
+
+    public List<UserResponse> getAllUsers(){
+        List<User> users = userRepository.findAll();
+
+        return userMapper.toResponseList(users);
+    }
+
+    public List<PinResponse> getUserPins(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return user.getLikes();
+        return user.getPins().stream()
+                .map(pinMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<LikeResponse> getUserLikes(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return user.getLikes().stream()
+                .map(likeMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     /**
      * UPDATE Methods
      */
-    public User updateUserEmail(Long id, String newEmail){
+    public UserResponse updateUserEmail(Long id, UpdateEmailRequest updateEmailRequest){
+        String newEmail = updateEmailRequest.getEmail();
+
         if (userRepository.existsByEmail(newEmail)){
             throw new DuplicateResourceException("Email already taken");
         }
@@ -76,17 +112,23 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         user.setEmail(newEmail);
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return userMapper.toResponse(user);
     }
 
-    public User updateUserPassword(Long id, String oldPassword, String newPassword){
+    public UserResponse updateUserPassword(Long id, UpdatePasswordRequest updatePasswordRequest){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         // TODO: Verify that the old password matches the stored hash one!
         // TODO: Hash + Salt the password!
+        String newPassword = updatePasswordRequest.getNewPassword();
         user.setPasswordHash(newPassword);
-        return userRepository.save(user);
+
+        userRepository.save(user);
+
+        return userMapper.toResponse(user);
     }
 
     /**
