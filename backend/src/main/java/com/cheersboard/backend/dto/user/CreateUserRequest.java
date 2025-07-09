@@ -4,10 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class CreateUserRequest {
     @NotBlank
     @Size(min = 8, max = 50)
@@ -20,5 +22,4 @@ public class CreateUserRequest {
     @NotBlank
     @Email
     private String email;
-    private LocalDateTime createdAt;
 }
