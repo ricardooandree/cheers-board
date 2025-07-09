@@ -1,4 +1,4 @@
-package com.cheersboard.backend.dto;
+package com.cheersboard.backend.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
