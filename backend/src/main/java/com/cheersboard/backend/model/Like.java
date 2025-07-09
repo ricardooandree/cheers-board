@@ -18,7 +18,6 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "liked_at", nullable = false, updatable = false)
     private LocalDateTime likedAt;
