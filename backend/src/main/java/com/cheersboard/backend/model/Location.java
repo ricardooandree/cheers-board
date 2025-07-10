@@ -50,6 +50,11 @@ public class Location {
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     private List<Pin> pins = new ArrayList<>();
 
+    public Location(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+    
     public Location(Double latitude, Double longitude, String address, String city, String country, String continent) {
         this.latitude = latitude;
         this.longitude = longitude;
