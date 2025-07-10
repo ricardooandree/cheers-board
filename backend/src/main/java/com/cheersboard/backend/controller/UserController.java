@@ -68,14 +68,16 @@ public class UserController {
      * UPDATE Routes
      */
     @PutMapping("/{id}/email")
-    public ResponseEntity<UserResponse> updateUserEmail(@PathVariable("id") Long id, @Valid @RequestBody UpdateEmailRequest updateEmailRequest){
+    public ResponseEntity<UserResponse> updateUserEmail(@PathVariable("id") Long id,
+                                                        @Valid @RequestBody UpdateEmailRequest updateEmailRequest){
         UserResponse user = userService.updateUserEmail(id, updateEmailRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<UserResponse> updateUserPassword(@PathVariable("id") Long id, @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest){
+    public ResponseEntity<UserResponse> updateUserPassword(@PathVariable("id") Long id,
+                                                           @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest){
         UserResponse user = userService.updateUserPassword(id, updatePasswordRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
