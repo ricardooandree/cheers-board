@@ -26,7 +26,9 @@ public class UserMapper {
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),
-                user.getCreatedAt()
+                user.getCreatedAt(),
+                user.getPins().size(),
+                user.getLikes().size()
         );
     }
 

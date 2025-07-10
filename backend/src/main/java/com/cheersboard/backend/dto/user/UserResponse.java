@@ -13,4 +13,6 @@ public class UserResponse {
     private Long id;
     private String username;
     private LocalDateTime createdAt;
+    private int pinsCount;
+    private int likesCount;
 }
