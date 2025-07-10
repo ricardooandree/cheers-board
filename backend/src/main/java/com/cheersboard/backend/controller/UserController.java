@@ -23,6 +23,19 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * CREATE Routes
+     */
+    @PostMapping
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest){
+        UserResponse createdUser = userService.createUser(createUserRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+    /**
+     * GET Routes
+     */
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable("id") Long id){
         UserResponse user = userService.getUserById(id);
@@ -37,13 +50,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest){
-        UserResponse createdUser = userService.createUser(createUserRequest);
+    @GetMapping("/{id}/pins")
+    public ResponseEntity<List<PinResponse>> getUserPins(@PathVariable("id") Long id){
+        List<PinResponse> userPins = userService.getUserPins(id);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return ResponseEntity.status(HttpStatus.OK).body(userPins);
     }
 
+    @GetMapping("/{id}/likes")
+    public ResponseEntity<List<LikeResponse>> getUserLikes(@PathVariable("id") Long id){
+        List<LikeResponse> userLikes = userService.getUserLikes(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userLikes);
+    }
+
+    /**
+     * UPDATE Routes
+     */
     @PutMapping("/{id}/email")
     public ResponseEntity<UserResponse> updateUserEmail(@PathVariable("id") Long id, @Valid @RequestBody UpdateEmailRequest updateEmailRequest){
         UserResponse user = userService.updateUserEmail(id, updateEmailRequest);
@@ -58,6 +81,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    /**
+     * DELETE Routes
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){
         userService.deleteUserById(id);
@@ -65,18 +91,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // ---
-    @GetMapping("/{id}/pins")
-    public ResponseEntity<List<PinResponse>> getUserPins(@PathVariable("id") Long id){
-        List<PinResponse> userPins = userService.getUserPins(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(userPins);
-    }
-
-    @GetMapping("/{id}/likes")
-    public ResponseEntity<List<LikeResponse>> getUserLikes(@PathVariable("id") Long id){
-        List<LikeResponse> userLikes = userService.getUserLikes(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(userLikes);
-    }
 }
