@@ -22,12 +22,12 @@ public class Location {
 
     @NotNull
     @Setter
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private Double latitude;
 
     @NotNull
     @Setter
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private Double longitude;
 
     // TODO: Once the reverse geo api is integrated add @NotBlank and nullable = false
@@ -54,7 +54,7 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    
+
     public Location(Double latitude, Double longitude, String address, String city, String country, String continent) {
         this.latitude = latitude;
         this.longitude = longitude;
