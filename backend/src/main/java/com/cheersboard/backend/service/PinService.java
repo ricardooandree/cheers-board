@@ -25,7 +25,6 @@ public class PinService {
     private final LocationService locationService;
     private final PinMapper pinMapper;
     private final LikeMapper likeMapper;
-    private final LocationRepository locationRepository;
 
     public PinService(PinRepository pinRepository,
                       UserRepository userRepository,
@@ -37,7 +36,6 @@ public class PinService {
         this.locationService = locationService;
         this.pinMapper = pinMapper;
         this.likeMapper = likeMapper;
-        this.locationRepository = locationRepository;
     }
 
     /**
@@ -48,18 +46,14 @@ public class PinService {
         User user = userRepository.findById(createPinRequest.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // TODO: Implement resolveOrCreate service method
-        // Location location = locationService.resolveOrCreate(createPinRequest.getLatitude(), createPinRequest.getLatitude());
-        // Location location = locationRepository.findByLatitudeAndLongitude(createPinRequest.getLatitude(), createPinRequest.getLatitude())
-        //                .orElse(create?)
-        // Something like that ^^^
+        Location location = locationService.resolveOrCreate(createPinRequest.getLatitude(), createPinRequest.getLongitude());
 
         Pin newPin = pinMapper.toEntity(createPinRequest, user, location);
 
         user.addPin(newPin);
         location.addPin(newPin);
-        pinRepository.save(newPin);
 
+        pinRepository.save(newPin);
         return pinMapper.toResponse(newPin);
     }
 
