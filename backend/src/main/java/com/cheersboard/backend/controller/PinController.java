@@ -48,6 +48,13 @@ public class PinController {
         return ResponseEntity.status(HttpStatus.OK).body(pins);
     }
 
+    @GetMapping("/{id}/likes")
+    public ResponseEntity<List<LikeResponse>> getPinLikes(@PathVariable("id") Long id){
+        List<LikeResponse> likes = pinService.getPinLikes(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(likes);
+    }
+
     /**
      * UPDATE Routes
      */
@@ -68,12 +75,4 @@ public class PinController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-    @GetMapping("/{id}/likes")
-    public ResponseEntity<List<LikeResponse>> getPinLikes(@PathVariable("id") Long id){
-        List<LikeResponse> likes = pinService.getPinLikes(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(likes);
-    }
-
 }
