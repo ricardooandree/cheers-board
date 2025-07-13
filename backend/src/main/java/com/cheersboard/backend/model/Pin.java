@@ -46,7 +46,7 @@ public class Pin {
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
-    @OneToMany(mappedBy = "pin", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pin", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
     public Pin(String description, User user, Location location) {
