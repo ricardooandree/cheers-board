@@ -65,7 +65,7 @@ public class LocationController {
      * DELETE Routes
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<LocationResponse> deleteLocation(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteLocation(@PathVariable("id") Long id){
         locationService.deleteLocationById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

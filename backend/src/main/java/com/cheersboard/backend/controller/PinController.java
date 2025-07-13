@@ -70,7 +70,7 @@ public class PinController {
      * DELETE Routes
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<PinResponse> deletePin(@PathVariable("id") Long id){
+    public ResponseEntity<?> deletePin(@PathVariable("id") Long id){
         pinService.deletePinById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
