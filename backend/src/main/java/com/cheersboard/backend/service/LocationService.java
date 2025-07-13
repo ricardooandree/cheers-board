@@ -2,24 +2,30 @@ package com.cheersboard.backend.service;
 
 import com.cheersboard.backend.dto.location.CreateLocationRequest;
 import com.cheersboard.backend.dto.location.LocationResponse;
+import com.cheersboard.backend.dto.pin.PinResponse;
 import com.cheersboard.backend.exception.DuplicateResourceException;
 import com.cheersboard.backend.exception.ResourceNotFoundException;
 import com.cheersboard.backend.model.Location;
 import com.cheersboard.backend.repository.LocationRepository;
 import com.cheersboard.backend.util.mapper.LocationMapper;
+import com.cheersboard.backend.util.mapper.PinMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
+    private final PinMapper pinMapper;
 
     public LocationService(LocationRepository locationRepository,
-                           LocationMapper locationMapper){
+                           LocationMapper locationMapper,
+                           PinMapper pinMapper){
         this.locationRepository = locationRepository;
         this.locationMapper = locationMapper;
+        this.pinMapper = pinMapper;
     }
 
     /**
@@ -50,6 +56,15 @@ public class LocationService {
         List<Location> locations = locationRepository.findAll();
 
         return locationMapper.toResponseList(locations);
+    }
+
+    public List<PinResponse> getLocationPins(Long id){
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+
+        return location.getPins().stream()
+                .map(pinMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     /**

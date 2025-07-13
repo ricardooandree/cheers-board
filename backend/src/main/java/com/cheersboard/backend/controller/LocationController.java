@@ -2,6 +2,7 @@ package com.cheersboard.backend.controller;
 
 import com.cheersboard.backend.dto.location.CreateLocationRequest;
 import com.cheersboard.backend.dto.location.LocationResponse;
+import com.cheersboard.backend.dto.pin.PinResponse;
 import com.cheersboard.backend.service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,13 @@ public class LocationController {
         List<LocationResponse> locations = locationService.getAllLocations();
 
         return ResponseEntity.status(HttpStatus.OK).body(locations);
+    }
+
+    @GetMapping("/{id}/pins")
+    public ResponseEntity<List<PinResponse>> getLocationPins(@PathVariable("id") Long id){
+        List<PinResponse> pins = locationService.getLocationPins(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(pins);
     }
 
 
