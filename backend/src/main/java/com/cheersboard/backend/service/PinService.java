@@ -99,10 +99,12 @@ public class PinService {
      * DELETE Methods
      */
     public void deletePinById(Long id){
-        if (!pinRepository.existsById(id)){
-            throw new ResourceNotFoundException("Pin not found");
-        }
+        Pin pin = pinRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pin not found"));
 
-        pinRepository.deleteById(id);
+        pin.getUser().removePin(pin);
+        pin.getLocation().removePin(pin);
+
+        pinRepository.delete(pin);
     }
 }
