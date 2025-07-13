@@ -34,6 +34,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleConstraintViolation(IllegalStateException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
     // Custom Exceptions
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<String> handleDuplicate(DuplicateResourceException e){
