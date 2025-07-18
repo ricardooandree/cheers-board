@@ -5,6 +5,7 @@ import com.cheersboard.backend.dto.like.LikeResponse;
 import com.cheersboard.backend.dto.pin.CreatePinRequest;
 import com.cheersboard.backend.dto.pin.PinResponse;
 import com.cheersboard.backend.dto.pin.UpdateDescriptionRequest;
+import com.cheersboard.backend.exception.DuplicateResourceException;
 import com.cheersboard.backend.exception.ResourceNotFoundException;
 import com.cheersboard.backend.model.Like;
 import com.cheersboard.backend.model.Location;
@@ -64,7 +65,7 @@ public class PinService {
 
     public LikeResponse likePin(Long id, CreateLikeRequest createLikeRequest){
         if (likeRepository.existsByUserIdAndPinId(createLikeRequest.getUserId(), id)) {
-            throw new ResourceNotFoundException("This Pin is already liked");
+            throw new DuplicateResourceException("This Pin is already liked");
         }
 
         User user = userRepository.findById(createLikeRequest.getUserId())
