@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
-    List<Like> findByUserId(Long userId);
-    List<Like> findByPinId(Long pinId);
+    List<Like> findAllByUserId(Long userId);
+    List<Like> findAllByPinId(Long pinId);
+    Optional<Like> findByUserIdAndPinId(Long userId, Long pinId);
     boolean existsByUserIdAndPinId(Long userId, Long pinId);  // Prevents duplicate post likes
     long countByUserId(Long userId);  // Gets the total number of likes a user did
     long countByPinId(Long pinId);    // Gets the total number of likes a pin has
