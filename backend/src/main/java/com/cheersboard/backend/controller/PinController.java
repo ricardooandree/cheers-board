@@ -1,5 +1,6 @@
 package com.cheersboard.backend.controller;
 
+import com.cheersboard.backend.dto.like.CreateLikeRequest;
 import com.cheersboard.backend.dto.like.LikeResponse;
 import com.cheersboard.backend.dto.pin.CreatePinRequest;
 import com.cheersboard.backend.dto.pin.PinResponse;
@@ -29,6 +30,14 @@ public class PinController {
         PinResponse createdPin = pinService.createPin(createPinRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPin);
+    }
+
+    @PostMapping("/{id}/likes")
+    public ResponseEntity<LikeResponse> likePin(@PathVariable Long id,
+                                                   @Valid @RequestBody CreateLikeRequest createLikeRequest){
+        LikeResponse createdLike = pinService.likePin(id, createLikeRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdLike);
     }
 
     /**
@@ -70,9 +79,19 @@ public class PinController {
      * DELETE Routes
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePin(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deletePin(@PathVariable("id") Long id){
         pinService.deletePinById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/{id}/likes")
+    public ResponseEntity<Void> unlikePin(@PathVariable("id") Long id,
+                                        @RequestParam Long userId
+                                        ){
+        pinService.unlikePin(id, userId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 }
