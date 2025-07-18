@@ -11,7 +11,4 @@ import lombok.Setter;
 public class CreateLikeRequest {
     @NotNull
     private Long userId;
-
-    @NotNull
-    private Long pinId;
 }

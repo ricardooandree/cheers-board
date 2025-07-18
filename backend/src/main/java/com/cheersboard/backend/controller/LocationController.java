@@ -22,6 +22,8 @@ public class LocationController {
 
     /**
      * CREATE Routes
+     *
+     * NOTE: This should only be used for development purposes, Location creation is highly tied to Pin creation (?)
      */
     @PostMapping
     public ResponseEntity<LocationResponse> createPin(@Valid @RequestBody CreateLocationRequest createLocationRequest){
@@ -63,9 +65,11 @@ public class LocationController {
 
     /**
      * DELETE Routes
+     *
+     * NOTE: This should only be used for development purposes, Location deletion is highly tied to all Pin deletion (?)
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLocation(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteLocation(@PathVariable("id") Long id){
         locationService.deleteLocationById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
