@@ -13,6 +13,7 @@ import com.cheersboard.backend.repository.UserRepository;
 import com.cheersboard.backend.util.mapper.LikeMapper;
 import com.cheersboard.backend.util.mapper.PinMapper;
 import com.cheersboard.backend.util.mapper.UserMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +25,18 @@ public class UserService {
     private final UserMapper userMapper;
     private final PinMapper pinMapper;
     private final LikeMapper likeMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
                        UserMapper userMapper,
                        PinMapper pinMapper,
-                       LikeMapper likeMapper) {
+                       LikeMapper likeMapper,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.pinMapper = pinMapper;
         this.likeMapper = likeMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -47,11 +51,9 @@ public class UserService {
             throw new DuplicateResourceException("Email already taken");
         }
 
-        // TODO: Password hashing + salting!
-
         String password = createUserRequest.getPassword();
 
-        User newUser = userMapper.toEntity(createUserRequest, password);
+        User newUser = userMapper.toEntity(createUserRequest, passwordEncoder.encode(password));
         userRepository.save(newUser);
 
         return userMapper.toResponse(newUser);
