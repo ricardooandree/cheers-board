@@ -12,7 +12,6 @@ import com.cheersboard.backend.model.Location;
 import com.cheersboard.backend.model.Pin;
 import com.cheersboard.backend.model.User;
 import com.cheersboard.backend.repository.LikeRepository;
-import com.cheersboard.backend.repository.LocationRepository;
 import com.cheersboard.backend.repository.PinRepository;
 import com.cheersboard.backend.repository.UserRepository;
 import com.cheersboard.backend.util.mapper.LikeMapper;
@@ -34,8 +33,9 @@ public class PinService {
     public PinService(PinRepository pinRepository,
                       UserRepository userRepository,
                       LocationService locationService,
+                      LikeRepository likeRepository,
                       PinMapper pinMapper,
-                      LikeMapper likeMapper, LocationRepository locationRepository, LikeRepository likeRepository) {
+                      LikeMapper likeMapper) {
         this.pinRepository = pinRepository;
         this.userRepository = userRepository;
         this.locationService = locationService;
